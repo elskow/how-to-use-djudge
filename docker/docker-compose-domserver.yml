@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  domserver:
+    container_name: domserver
+    image: domjudge/domserver:8.2.1
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    ports:
+      - 80:80
+    depends_on:
+      - mariadb
+    env_file:
+      - domserver.env
+    links:
+      - mariadb:mariadb
+    restart: on-failure:3
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    volumes:
+      - ./db:/var/lib/mysql
+    ports:
+      - 13306:3306
+    env_file:
+      - domserver.env
+    command: --max-connections=1000 --innodb-log-file-size=2G --max-allowed-packet=1G --net_read_timeout=3600 --net_write_timeout=3600
+
+  phpmyadmin:
+    container_name: myadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8888:80
+    depends_on:
+      - mariadb
+    env_file:
+      - domserver.env
+    links:
+      - mariadb:mariadb

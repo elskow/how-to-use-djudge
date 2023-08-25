@@ -1,0 +1,26 @@
+version: '3.9'
+
+x-common-configuration: &common-configuration
+  image: domjudge/judgehost:8.2.1
+  restart: on-failure:5
+  privileged: true
+  volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  env_file:
+    - judgehost.env
+
+services:
+  core1:
+    <<: *common-configuration
+    hostname: core1
+    container_name: judgehost1
+    environment:
+      DAEMON_ID: 0
+
+  core2:
+    <<: *common-configuration
+    hostname: core2
+    container_name: judgehost2
+    environment:
+      DAEMON_ID: 1
+  
