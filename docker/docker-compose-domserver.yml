@@ -3,7 +3,7 @@ version: "3"
 services:
   domserver:
     container_name: domserver
-    image: domjudge/domserver:8.2.1
+    image: elskow/domserver-rpl:latest
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
